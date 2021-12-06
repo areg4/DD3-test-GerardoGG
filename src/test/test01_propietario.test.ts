@@ -17,10 +17,10 @@ describe("Propietario Tests",()=>{
         "apellidos":"TestTest"
     }
     
-    // test("Create Propietario",async()=>{
-    //     let res = await request(app).post("/api/propietarios").send(propietario).set("apiKey","tokentest")
-    //     expect(res.status).toBe(201);
-    // })
+    test("Create Propietario",async()=>{
+        let res = await request(app).post("/api/propietarios").send(propietario).set("apiKey","tokentest")
+        expect(res.status).toBe(201);
+    })
     
     test("GET list of Propietarios", async()=>{
         let res = await request(app).get("/api/propietarios").set("apiKey","tokentest")
@@ -37,8 +37,8 @@ describe("Propietario Tests",()=>{
         expect(res.status).toBe(200)
     })
 
-    // test("DELETE Propietario By ID",async()=>{
-    //     let res = await request(app).del("/api/propietarios/1").set("apiKey","tokentest")
-    //     expect(res.status).toBe(200)
-    // })
+    test("DELETE Propietario By ID",async()=>{
+        let res = await request(app).del("/api/propietarios/1").set("apiKey","tokentest")
+        expect(res.status).toBe(200)
+    })
 });

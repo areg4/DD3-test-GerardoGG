@@ -25,10 +25,10 @@ describe("Inmuebles Test",()=>{
         "propietarioId":1
     }
 
-    // test("CREATE Inmueble",async()=>{
-    //     let res = await request(app).post("/api/inmuebles").send(inmueble).set("apiKey","tokentest")
-    //     expect(res.status).toBe(201)
-    // })
+    test("CREATE Inmueble",async()=>{
+        let res = await request(app).post("/api/inmuebles").send(inmueble).set("apiKey","tokentest")
+        expect(res.status).toBe(201)
+    })
 
     test("GET list of Inmuebles", async()=>{
         let res = await request(app).get("/api/inmuebles").set("apiKey","tokentest")
@@ -80,8 +80,8 @@ describe("Inmuebles Test",()=>{
         expect(res.status).toBe(200)
     })
 
-    // test("DELETE Inmueble by ID", async()=>{
-    //     let res = await request(app).del("/api/inmueble/1")
-    //     expect(res.status).toBe(200)
-    // })
+    test("DELETE Inmueble by ID", async()=>{
+        let res = await request(app).del("/api/inmueble/1")
+        expect(res.status).toBe(200)
+    })
 })
