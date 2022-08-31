@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { Inmueble } from "../entity/Inmueble";
-import { Between, getRepository } from "typeorm";
+import { Between } from "typeorm";
+import { AppDataSource } from "../data-source";
 
 /**
  * @swagger
@@ -27,7 +28,8 @@ import { Between, getRepository } from "typeorm";
  */
 export const getInmuebles = async (req:Request,res:Response): Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find();
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find();
         if(inmuebles.length>0){
             return res.json(inmuebles);
         }
@@ -101,8 +103,9 @@ export const getInmuebles = async (req:Request,res:Response): Promise<Response>=
  */
 export const createInmueble = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const newInmueble = getRepository(Inmueble).create(req.body);
-        const results = await getRepository(Inmueble).save(newInmueble);
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const newInmueble = inmuebleRepository.create(req.body);
+        const results = await inmuebleRepository.save(newInmueble);
         return res.status(201).json(results)
     } catch (e) {
         console.log(e)
@@ -140,7 +143,10 @@ export const createInmueble = async(req:Request,res:Response):Promise<Response>=
  */
 export const getInmueble = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const results = await getRepository(Inmueble).findOne(req.params.id);
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const results = await inmuebleRepository.findOne({
+            where: { id: Number(req.params.id)}
+        });
         if(results){
             return res.json(results)
         }
@@ -221,10 +227,13 @@ export const getInmueble = async(req:Request,res:Response):Promise<Response>=>{
  */
 export const updateInmueble = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmueble = await getRepository(Inmueble).findOne(req.params.id);
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmueble = await inmuebleRepository.findOne({
+            where: { id: Number(req.params.id)}
+        });
         if(inmueble){
-            getRepository(Inmueble).merge(inmueble,req.body)
-            const results = await getRepository(Inmueble).save(inmueble)
+            inmuebleRepository.merge(inmueble,req.body)
+            const results = await inmuebleRepository.save(inmueble)
             return res.json(results)
         }
         return res.status(404).json("Inmueble no disponible")
@@ -264,9 +273,12 @@ export const updateInmueble = async(req:Request,res:Response):Promise<Response>=
  */
 export const deleteInmueble = async(req:Request, res:Response):Promise<Response>=>{
     try {
-        const inmueble = await getRepository(Inmueble).findOne(req.params.id);
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmueble = await inmuebleRepository.findOne({
+            where: { id: Number(req.params.id)}
+        });
         if(inmueble){
-            const results = await getRepository(Inmueble).delete(inmueble)
+            const results = await inmuebleRepository.delete(inmueble)
             return res.json(results)
         }
         return res.status(404).json("Inmueble no disponible")
@@ -306,7 +318,8 @@ export const deleteInmueble = async(req:Request, res:Response):Promise<Response>
  */
 export const getInmuebleByType = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find({ where: { status: req.params.tipo} })
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find({ where: { status: Number(req.params.tipo)} })
         if (inmuebles.length>0){
             return res.json(inmuebles)
         }
@@ -347,7 +360,8 @@ export const getInmuebleByType = async(req:Request,res:Response):Promise<Respons
  */
 export const getInmuebleByRooms = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find({ where: { habitaciones: req.params.numero} })
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find({ where: { habitaciones: Number(req.params.numero)} })
         if (inmuebles.length>0){
             return res.json(inmuebles)
         }
@@ -388,7 +402,8 @@ export const getInmuebleByRooms = async(req:Request,res:Response):Promise<Respon
  */
 export const getInmuebleByBathrooms = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find({ where: { banios: req.params.numero} })
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find({ where: { banios: Number(req.params.numero)} })
         if (inmuebles.length>0){
             return res.json(inmuebles)
         }
@@ -429,7 +444,8 @@ export const getInmuebleByBathrooms = async(req:Request,res:Response):Promise<Re
  */
 export const getInmuebleByParking = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find({ where: { estacionamientos: req.params.numero} })
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find({ where: { estacionamientos: Number(req.params.numero)} })
         if (inmuebles.length>0){
             return res.json(inmuebles)
         }
@@ -470,7 +486,8 @@ export const getInmuebleByParking = async(req:Request,res:Response):Promise<Resp
  */
 export const getInmuebleByMtrs = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find({ where: { metrosCuadrados: req.params.numero} })
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find({ where: { metrosCuadrados: Number(req.params.numero)} })
         if (inmuebles.length>0){
             return res.json(inmuebles)
         }
@@ -516,7 +533,10 @@ export const getInmuebleByMtrs = async(req:Request,res:Response):Promise<Respons
  */
 export const getInmuebleByPriceRange = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find({ where: { precio: Between(req.params.desde,req.params.hasta)} })
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find({ 
+            where: { precio: Between(Number(req.params.desde), Number(req.params.hasta))} 
+        })
         if (inmuebles.length>0){
             return res.json(inmuebles)
         }
@@ -557,7 +577,8 @@ export const getInmuebleByPriceRange = async(req:Request,res:Response):Promise<R
  */
 export const getInmuebleByOwner = async(req:Request,res:Response):Promise<Response>=>{
     try {
-        const inmuebles = await getRepository(Inmueble).find({ where: { propietarioId: req.params.idPropietario} })
+        const inmuebleRepository = AppDataSource.getRepository(Inmueble)
+        const inmuebles = await inmuebleRepository.find({ where: { propietarioId: Number(req.params.idPropietario)} })
         if (inmuebles.length>0){
             return res.json(inmuebles)
         }

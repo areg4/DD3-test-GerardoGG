@@ -1,6 +1,6 @@
 import { Request,Response } from "express"
 import { Propietario } from "../entity/Propietario";
-import { getRepository } from "typeorm";
+import { AppDataSource } from "../data-source";
 
 /**
  * @swagger
@@ -27,7 +27,8 @@ import { getRepository } from "typeorm";
  */
 export const getPropietarios = async(req: Request,res:Response): Promise<Response>=>{
     try{    
-        const propietarios = await getRepository(Propietario).find();
+        const propietarioRepository = AppDataSource.getRepository(Propietario)
+        const propietarios = await propietarioRepository.find();
         if(propietarios.length>0){
             return res.json(propietarios);
         }
@@ -71,8 +72,9 @@ export const getPropietarios = async(req: Request,res:Response): Promise<Respons
  */
 export const createPropietario = async (req:Request,res:Response): Promise<Response>=>{
     try{
-        const newPropietario = getRepository(Propietario).create(req.body);
-        const results = await getRepository(Propietario).save(newPropietario);
+        const propietarioRepository = AppDataSource.getRepository(Propietario)
+        const newPropietario = propietarioRepository.create(req.body);
+        const results = await propietarioRepository.save(newPropietario);
         return res.status(201).json(results);
     }catch(e){
         console.log(e)
@@ -110,7 +112,10 @@ export const createPropietario = async (req:Request,res:Response): Promise<Respo
  */
 export const getPropietario = async(req: Request,res:Response): Promise<Response>=>{
     try{
-        const results = await getRepository(Propietario).findOne(req.params.id);
+        const propietarioRepository = AppDataSource.getRepository(Propietario)
+        const results = await propietarioRepository.findOne({
+            where: {id: Number(req.params.id)}
+        });
         if (results){
             return res.json(results);
         }
@@ -161,10 +166,13 @@ export const getPropietario = async(req: Request,res:Response): Promise<Response
  */
 export const updatePropietario = async(req: Request,res:Response): Promise<Response>=>{
     try{
-        const propietario = await getRepository(Propietario).findOne(req.params.id);
+        const propietarioRepository = AppDataSource.getRepository(Propietario)
+        const propietario = await propietarioRepository.findOne({
+            where: {id: Number(req.params.id)}
+        });
         if (propietario){
-            getRepository(Propietario).merge(propietario,req.body)
-            const results = await getRepository(Propietario).save(propietario)
+            propietarioRepository.merge(propietario,req.body)
+            const results = await propietarioRepository.save(propietario)
             return res.json(results)
         }
         return res.status(404).json("Propietario no encontrado")
@@ -204,9 +212,12 @@ export const updatePropietario = async(req: Request,res:Response): Promise<Respo
  */
 export const deletePropietario = async(req: Request,res:Response): Promise<Response>=>{
     try{
-        const propietario = await getRepository(Propietario).findOne(req.params.id);
+        const propietarioRepository = AppDataSource.getRepository(Propietario)
+        const propietario = await propietarioRepository.findOne({
+            where: {id:Number(req.params.id)}
+        });
         if (propietario){
-            const results = await getRepository(Propietario).delete(propietario)
+            const results = await propietarioRepository.delete(propietario)
             return res.json(results)
         }
         return res.status(404).json("Propietario no encontrado")

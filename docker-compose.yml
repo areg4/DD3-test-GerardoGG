@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+
+  db:
+    restart: always
+    image: postgres:12-alpine3.15
+    container_name: db_prueba
+    env_file: .env
+    ports:
+      - "5432:5432"
+
+
+  backend:
+    container_name: backend_dd3
+    build:
+      context: .
+    env_file: .env
+    command: sh -c "npm start"
+    ports:
+        - "3000:3000"
+    volumes:
+        - .:/app
+    # restart: always
+    depends_on:
+      - db

@@ -10,6 +10,6 @@ export class Propietario{
     nombre:string;
     @Column()
     apellidos:string;
-    @OneToMany(()=>Inmueble,(inmueble:Inmueble)=>inmueble.propietario)
+    @OneToMany(() => Inmueble, (inmueble) => inmueble.id)
     public inmueble: Inmueble[]
 }

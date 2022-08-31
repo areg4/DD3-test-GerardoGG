@@ -1,4 +1,3 @@
-import { type } from "os";
 import { Entity, Column, PrimaryGeneratedColumn, ManyToMany, ManyToOne, JoinColumn } from "typeorm";
 import { Propietario } from "./Propietario";
 
@@ -6,25 +5,32 @@ import { Propietario } from "./Propietario";
 export class Inmueble{
     @PrimaryGeneratedColumn()
     id:number;
+    
     @Column()
     habitaciones:number;
-    @Column({ type: "float" })
+    
+    @Column("double")
     banios:number;
-    @Column()
+    
+    @Column("double")
     estacionamientos:number;
-    @Column({ type: "float" })
+    
+    @Column("double")
     metrosCuadrados:number;
-    @Column({ type: "float" })
+    
+    @Column("double")
     precio:number;
+    
     @Column()
     imagenes:number;
+    
     @Column()
     status:number; //1:renta, 2:compra, 3:ambos
 
     @Column()
     propietarioId:number
     
-    @ManyToOne(()=>Propietario,(propietario:Propietario)=>propietario.inmueble)
-    @JoinColumn({ name: 'propietarioId' })
+    @ManyToOne(() => Propietario, (inmueble) => inmueble.id)
+    @JoinColumn()
     propietario:Propietario;
 }
